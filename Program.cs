@@ -2,6 +2,7 @@
 using SeeBattle.Game;
 using SeeBattle.Game.Actors;
 using SeeBattle.Menu;
+using Seebattle.Core.Dialogs;
 using System;
 
 namespace Seebattle
@@ -10,6 +11,7 @@ namespace Seebattle
     {
         static void Main(string[] args)
         {
+            Console.Clear();
             //string text = "Новая Игра";
             //Menu menu = new Menu(text.Length + 4, 6, new Vector2D(5, 1));
             //menu.Items.Add(new MenuItem(null, text, new Vector2D(2, 1)));
@@ -18,8 +20,8 @@ namespace Seebattle
             Game game = new Game(
               new Player("Test-Chan", new Map("Test-Chan Field")),
               new Player("Test'Er", new Map("Test'Er Field")));
-            game.Start();
-
+            //game.Start();
+            MessageBox.Show("Hello, World!");
 
             Console.Read();
 

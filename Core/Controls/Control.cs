@@ -68,24 +68,57 @@ namespace SeeBattle.Core.Controls
         /// </summary>
         public abstract void Draw();
 
-        public static Cell[] DrawLeftRightWalls(Cell[] body, Int32 bodyWidht, Int32 bodyHeight)
+        public static Cell[] DrawLeftRightWalls(
+                Cell[] body, 
+                Int32 bodyWidht, 
+                Int32 bodyHeight)
         {
             Cell[] temp = body;
+            for (int x = 0; x < bodyWidht; x++)
+                for (int y = 0; y < bodyHeight; y++)
+                {
+                    Int32 index = x + bodyWidht * y;
+                    if (x.Equals(0) && y > 0)
+                        temp[index].Symbol = '|';
+                    if (x.Equals(bodyWidht - 1) && y > 0)
+                        temp[index].Symbol = '|';
+
+                }
+            return temp;
+        }
+
+        public static Cell[] DrawUpDownWalls(
+                Cell[] body, 
+                Int32 bodyWidht, 
+                Int32 bodyHeight)
+        {
+            Cell[] temp = body;
+            for (int i = 1; i < bodyWidht - 1; i++)
+                temp[i].Symbol = '-';
+
+            for (
+                    int i = bodyWidht * bodyHeight - bodyWidht; 
+                    i < bodyWidht * bodyHeight - 1; 
+                    i++)
+                temp[i].Symbol = '-';
 
             return temp;
         }
 
-        public static Cell[] DrawUpDownWalls(Cell[] body, Int32 bodyWidht, Int32 bodyHeight)
-        {
-            Cell[] temp = body;
-
-            return temp;
-        }
         //angles
         public static Cell[] DrawAngels(Cell[] body, Int32 bodyWidht, Int32 bodyHeight)
         {
             Cell[] temp = body;
-
+            for (int x = 0; x < bodyWidht; x++)
+                for (int y = 0; y < bodyHeight; y++)
+                {
+                    Int32 index = x + bodyWidht * y;
+                    if (index.Equals(0) 
+                        || index.Equals(bodyWidht * bodyHeight - 1) 
+                        || index.Equals(bodyWidht * bodyHeight - bodyWidht) 
+                        || index.Equals(bodyWidht - 1))
+                        temp[index].Symbol = '+';
+                }
             return temp;
         }
         #endregion

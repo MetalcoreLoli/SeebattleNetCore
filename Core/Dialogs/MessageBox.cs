@@ -24,12 +24,15 @@ namespace Seebattle.Core.Dialogs
         #region Constructors
         static MessageBox()
         {
-            _location   = new Vector2D(Console.WindowWidth / 2, Console.WindowHeight / 2);
+            _location   
+                = new Vector2D(
+                        Console.WindowWidth / 2, 
+                        Console.WindowHeight / 2);
 
-            _width  = 15;
-            _height = 10;
+            _width  = 30;
+            _height = 5;
 
-            _body = new Cell[_width * _height];
+            _body = InitBody(_width, _height);
             _text       = new Lable();
         }
         #endregion
@@ -43,7 +46,10 @@ namespace Seebattle.Core.Dialogs
         public static void Show(string message)
         {
             _text.Text = message;
-
+            foreach (Cell cell in _body)
+               Render.WithOffset(cell, 0, 0); 
+            
+            _text.Draw();
 
         }
         #endregion
@@ -62,28 +68,11 @@ namespace Seebattle.Core.Dialogs
                 }
 
             
-            for (int x = 0; x < widht; x++)
-                for (int y = 0; y < heigth; y++)
-                { 
-                    
-                }
-
            //замена символов клеток, что находятся по углам на +
            //так же замена символов клеток, что находятся по бокам на |
-           for (int x = 0; x < widht; x++)
-                for (int y = 0; y < heigth; y++)
-                {
-                    Int32 index = x + widht * y;
-
-                    if (x.Equals(0) && y > 0)
-                        temp[index].Symbol = '|';
-                    if (x.Equals(widht - 1) && y > 0)
-                        temp[index].Symbol = '|';
-
-                    if (index.Equals(0) || index.Equals(widht * heigth - 2) 
-                        || index.Equals(widht * heigth - widht) || index.Equals(widht - 1))
-                        temp[index].Symbol = '+';
-                }
+           temp = Control.DrawUpDownWalls(temp, widht, heigth);
+           temp = Control.DrawLeftRightWalls(temp, widht, heigth);
+           temp = Control.DrawAngels(temp, widht, heigth); 
 
 
             return temp;

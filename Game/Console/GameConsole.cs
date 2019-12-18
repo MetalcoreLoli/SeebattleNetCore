@@ -156,7 +156,10 @@ namespace SeeBattle.Game.LogConsoles
             _lines.Add(new Lable
             {
                 Text = text,
-                Location = new Vector2D(Location.X + 1, Location.Y + (_currentLineNumber++) + 1)
+                Location 
+                    = new Vector2D(
+                            Location.X + 1, 
+                            Location.Y + (_currentLineNumber++) + 1)
             });
         }
 
