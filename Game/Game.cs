@@ -52,12 +52,18 @@ namespace SeeBattle.Game
         /// <summary>
         /// метка с инфомацией о счете игрока
         /// </summary>
-        private Lable _currentPlayerScoreLable;
+        private Lable _currentPlayerKilledLable;
+        private Lable _currentPlayerLostLable;
 
         /// <summary>
         /// метка с информацией о количестве кораблей
         /// </summary>
         private Lable _currentPlayerShipCountLable;
+
+        /// <summary>
+        /// метка с информецие о заголовке статистики
+        /// </summary>
+        private Lable _staticTitle;
         #endregion
 
         #region Public Propertie
@@ -91,18 +97,19 @@ namespace SeeBattle.Game
         /// </summary>
         public void Start()
         {
+
             //игроки создаю свой флот и размещают его на карте
-            //PlayerCreateFleet(_firstPlayer);
-            //PlayerCreateFleet(_secondPlayer);
+            PlayerCreateFleet(_firstPlayer);
+            PlayerCreateFleet(_secondPlayer);
 
 
-            _firstPlayer.Map.AddShipToMap(CreateShip(_firstPlayer.Map, "s a1 v"));
-            _firstPlayer.Map.AddShipToMap(CreateShip(_firstPlayer.Map, "s a3 v"));
-            _firstPlayer.Map.AddShipToMap(CreateShip(_firstPlayer.Map, "c b5"));
+            //_firstPlayer.Map.AddShipToMap(CreateShip(_firstPlayer.Map, "s a1 v"));
+            //_firstPlayer.Map.AddShipToMap(CreateShip(_firstPlayer.Map, "s a3 v"));
+            //_firstPlayer.Map.AddShipToMap(CreateShip(_firstPlayer.Map, "c b5"));
 
-            _secondPlayer.Map.AddShipToMap(CreateShip(_secondPlayer.Map, "s a1 v"));
-            _secondPlayer.Map.AddShipToMap(CreateShip(_secondPlayer.Map, "s a3"));
-            _secondPlayer.Map.AddShipToMap(CreateShip(_secondPlayer.Map, "c b5"));
+            //_secondPlayer.Map.AddShipToMap(CreateShip(_secondPlayer.Map, "s a1 v"));
+            //_secondPlayer.Map.AddShipToMap(CreateShip(_secondPlayer.Map, "s a3"));
+            //_secondPlayer.Map.AddShipToMap(CreateShip(_secondPlayer.Map, "c b5"));
 
             //очистка консоли
             Console.Clear();
@@ -137,17 +144,29 @@ namespace SeeBattle.Game
         {
             Controls                                = new List<Control>();
 
+            Int32 stat_x = _firstPlayer.EnemyMap.Widht + _firstPlayer.Map.Widht + 25;
+
+            _staticTitle = new Lable();
+
+
             _currentPlayerLable                     = new Lable();
-            _currentPlayerScoreLable                = new Lable();
+            _currentPlayerKilledLable               = new Lable();
+            _currentPlayerLostLable                 = new Lable();
             _currentPlayerShipCountLable            = new Lable();
 
+            _staticTitle.Location                   = new Core.Vector2D(stat_x, 0);
+
             _currentPlayerLable.Location            = new Core.Vector2D(0, _firstPlayer.Map.Height + 2);
-            _currentPlayerScoreLable.Location       = new Core.Vector2D(0, _firstPlayer.Map.Height + 3);
-            _currentPlayerShipCountLable.Location   = new Core.Vector2D(0, _firstPlayer.Map.Height + 4);
+            _currentPlayerKilledLable.Location      = new Core.Vector2D(stat_x, 2);
+            _currentPlayerLostLable.Location        = new Core.Vector2D(stat_x, 3);
+            _currentPlayerShipCountLable.Location   = new Core.Vector2D(stat_x, 4);
+
 
             Controls.Add(_currentPlayerLable);
-            Controls.Add(_currentPlayerScoreLable);
             Controls.Add(_currentPlayerShipCountLable);
+            Controls.Add(_currentPlayerKilledLable);
+            Controls.Add(_currentPlayerLostLable);
+            Controls.Add(_staticTitle);
         }
 
         /// <summary>
@@ -221,8 +240,10 @@ namespace SeeBattle.Game
         /// <param name="actor">Игрок</param>
         private void ShowPlayerStatistic(IActor actor)
         {
-            _currentPlayerScoreLable.Text = $"{actor.Name} ваш счет(Подбито / Потеряно): {actor.Destroyed} / {actor.Lost}";
-            _currentPlayerShipCountLable.Text = $"Количество кораблей выживших кораблей: {(actor.Map.Shipes.Count - actor.Lost)}";
+            _staticTitle.Text                   = $"Статистика игрока {actor.Name}";
+            _currentPlayerKilledLable.Text      = $"Подбито:    {actor.Destroyed}";
+            _currentPlayerLostLable.Text        = $"Потеряно:   {actor.Lost}";
+            _currentPlayerShipCountLable.Text   = $"Количество кораблей выживших кораблей: {(actor.Map.Shipes.Count - actor.Lost)}";
         }
 
         /// <summary>
@@ -243,11 +264,14 @@ namespace SeeBattle.Game
         {
             //очистка игровой консоли
             _gameConsole.Clean();
-            
+
+            Player.EnemyMap.IsCellsVisible = false;
+            Player.Map.IsCellsVisible = true;
+
             //создание меток с текстом-подсказкой
-            Lable firstLine     = new Lable($"{Player.Name} разместите флот");
-            Lable secondLine    = new Lable($"линкор(b) крейсер(cr) эсминец(c) подводная лодка(s)");
-            Lable thirdLine     = new Lable($"Пример: c a1 v");
+            Lable firstLine     = new Lable($"Создание и размещение подлодок - #");
+            Lable secondLine    = new Lable($"Примен: a1 v, где а1 - позиция, v - верикально, если это параметр не указан, то корабль");
+            Lable thirdLine     = new Lable($"создастся горизонтально");
             
             //размешение меток в консоле
             firstLine.Location  = new Core.Vector2D(0, _firstPlayer.Map.Height + 2);
@@ -259,14 +283,25 @@ namespace SeeBattle.Game
             Controls.Add(secondLine);
             Controls.Add(thirdLine);
             
-            //отрисовка конторлов
-            DrawControls();
-
             try
             {
-                ShipBase ship = CreateShip(Player.Map, _gameConsole.Input());
-                Player.Fleet.AddShipeToFleet(ship);
+              
+                CreateShips(Player, 4, "s");
+                
+                firstLine.Text = "Создание и размещение крейсера - ##";
+                CreateShips(Player, 3, "c");
+
+                firstLine.Text = "Создание и размещение эсминкца - ###";
+                CreateShips(Player, 2, "cr");
+
+                DrawControls();
+                firstLine.Text = "Создание и размещение линкор - ####";
+                ShipBase ship = CreateShip(Player.Map, "b "+_gameConsole.Input());
                 Player.Map.AddShipToMap(ship);
+                Player.Fleet.AddShipeToFleet(ship);
+
+                Player.Map.Draw();
+
             }
             catch (Exception ex)
             {
@@ -277,6 +312,25 @@ namespace SeeBattle.Game
             Controls.Remove(firstLine);
             Controls.Remove(secondLine);
             Controls.Remove(thirdLine);
+        }
+
+        /// <summary>
+        /// Метод создает и размещает корабли на карте
+        /// </summary>
+        /// <param name="player">Игрок</param>
+        /// <param name="countOfShips">Количество кораблей, которое надо создать </param>
+        /// <param name="userInput">позиция, где создавать</param>
+        private void CreateShips(IActor player, Int32 countOfShips, string shipType)
+        {
+            while (countOfShips-- > 0)
+            {
+                DrawControls();
+                ShipBase ship = CreateShip(player.Map, shipType + " " +_gameConsole.Input());
+                player.Fleet.AddShipeToFleet(ship);
+
+                player.Map.AddShipToMap(ship);
+                player.Map.Draw();
+            }
         }
 
         /// <summary>
@@ -292,7 +346,7 @@ namespace SeeBattle.Game
         {
             string shipType = playersInput.Split(' ')[0];
             string position_from_str = playersInput.Split(' ')[1];
-            bool isVectical = (playersInput.Split(' ').Count() == 3) ? true : false;
+            bool isVectical = (playersInput.Contains('v')) ? true : false;
 
             ShipBase ship   = CreateShipFromString(shipType);
             ship.IsVertical = isVectical;

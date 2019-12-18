@@ -229,6 +229,8 @@ namespace SeeBattle.Game
                 else
                     y = ConvertLetterToInt(sym);
             }
+            if (x == 0) x = 10;
+            if (y == 0) y = 10;
             return new Vector2D(x, y);
         }
 

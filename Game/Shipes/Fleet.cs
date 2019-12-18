@@ -8,34 +8,32 @@ namespace SeeBattle.Game.Shipes
 {
     internal class Fleet
     {
-
-
-        private Stack<Submarine> _submarines;
-        private Stack<Cruiser> _crusers;
-        private Stack<Carrier> _carrier;
-        private BattleShip _battleShips;
+        public Stack<Submarine> Submarines  { get; private set; }
+        public Stack<Cruiser> Crusers       { get; private set; }
+        public Stack<Carrier> Carrier       { get; private set; }
+        public BattleShip BattleShips       { get; private set; }
 
         public Fleet()
         {
-            _submarines = new Stack<Submarine>(4);
-            _carrier = new Stack<Carrier>(3);
-            _crusers = new Stack<Cruiser>(2);
+            Submarines  = new Stack<Submarine>(4);
+            Carrier     = new Stack<Carrier>(3);
+            Crusers     = new Stack<Cruiser>(2);
         }
 
         #region Public Methods
         public void AddShipeToFleet(ShipBase ship)
         {
             if (ship is Submarine)
-                _submarines.Push(ship as Submarine);
+                Submarines.Push(ship as Submarine);
 
             if (ship is BattleShip)
-                _battleShips = ship as BattleShip;
+                BattleShips = ship as BattleShip;
 
             if (ship is Carrier)
-                _carrier.Push(ship as Carrier);
+                Carrier.Push(ship as Carrier);
 
             if (ship is Cruiser)
-                _crusers.Push(ship as Cruiser);
+                Crusers.Push(ship as Cruiser);
         }
 
         #endregion

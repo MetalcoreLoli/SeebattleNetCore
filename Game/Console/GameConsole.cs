@@ -77,7 +77,8 @@ namespace SeeBattle.Game.LogConsoles
 
 
         private void Init(Int32 width, Int32 height)
-        { 
+        {
+           
             _body = InitBody(Widht, Height);
             _linesString = new List<string>();
             _lines = new List<Lable>();
@@ -134,6 +135,7 @@ namespace SeeBattle.Game.LogConsoles
         public string Input()
         {
             string intput = Console.ReadLine();
+            body = InitBody(Widht, Height);
             Console.SetCursorPosition(this.Location.X + 1, this.Location.Y + 1);
             return intput;
         }
@@ -163,6 +165,13 @@ namespace SeeBattle.Game.LogConsoles
             _currentLineNumber = 0;
             _lines = new List<Lable>();
         }
+
+        public void Clear()
+        {
+            for (int i = 1; i < Widht * Height - 2; i++)
+                body[i].Symbol = ' ';
+        }
+
         #endregion
     }
 }
