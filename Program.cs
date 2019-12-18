@@ -20,6 +20,7 @@ namespace Seebattle
               new Player("Test'Er", new Map("Test'Er Field")));
             game.Start();
 
+
             Console.Read();
 
         }

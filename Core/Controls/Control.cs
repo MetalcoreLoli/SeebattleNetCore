@@ -67,6 +67,27 @@ namespace SeeBattle.Core.Controls
         /// Отрисовка
         /// </summary>
         public abstract void Draw();
+
+        public static Cell[] DrawLeftRightWalls(Cell[] body, Int32 bodyWidht, Int32 bodyHeight)
+        {
+            Cell[] temp = body;
+
+            return temp;
+        }
+
+        public static Cell[] DrawUpDownWalls(Cell[] body, Int32 bodyWidht, Int32 bodyHeight)
+        {
+            Cell[] temp = body;
+
+            return temp;
+        }
+        //angles
+        public static Cell[] DrawAngels(Cell[] body, Int32 bodyWidht, Int32 bodyHeight)
+        {
+            Cell[] temp = body;
+
+            return temp;
+        }
         #endregion
 
 
@@ -82,5 +103,7 @@ namespace SeeBattle.Core.Controls
             return temp;
         }
         #endregion
+
+
     }
 }
