@@ -1,9 +1,11 @@
-﻿using SeeBattle.Core;
+﻿using Seebattle.Core.Events.Properties;
+using SeeBattle.Core;
 using SeeBattle.Core.Controls;
 using SeeBattle.Game.Shipes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -36,10 +38,7 @@ namespace SeeBattle.Game
             set 
             {
                 _location = value;
-                _map        = InitMap(Widht, Height);
-                _mapBuffer  = InitMap(Widht, Height);
-                _leftLine = InitLineWithText(leftLineText, new Vector2D(0, 0), false);
-                _topLine = InitLineWithText(topLineText, new Vector2D(0, 0), true);
+                OnPropertyChanged(this.GetType().GetProperty(nameof(Location)));
             }
         }
 
@@ -78,7 +77,13 @@ namespace SeeBattle.Game
 
         private string topLineText  = "ABCDEFJHIG";
         private string leftLineText = "1234567890";
+
         #endregion
+
+        #region Events
+     
+        #endregion
+
 
         public Map(string title, Int32 width = 10, Int32 height = 10)
         {
@@ -86,6 +91,19 @@ namespace SeeBattle.Game
             Height          = height;
             Title           = title;
             Initializtion(Widht, Height);
+
+            PropertyChanged += (sender, evArgs) => 
+            {
+                switch (evArgs.PropertyName) 
+                {
+                    case nameof(Location):
+                        _map = InitMap(Widht, Height);
+                        _mapBuffer = InitMap(Widht, Height);
+                        _leftLine = InitLineWithText(leftLineText, new Vector2D(0, 0), false);
+                        _topLine = InitLineWithText(topLineText, new Vector2D(0, 0), true);
+                        break;
+                }
+            };
         }
 
         #region Private Methods

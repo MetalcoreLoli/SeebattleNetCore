@@ -58,7 +58,7 @@ namespace Seebattle.Core.Dialogs
         private static Cell[] InitBody(Int32 widht, Int32 heigth)
         {
             Cell[] temp = new Cell[widht * heigth];
-            //заполения temp клетками
+            //заполение temp клетками
             for (int x = 0; x < widht; x++)
                 for (int y = 0; y < heigth; y++)
                 {
@@ -68,13 +68,11 @@ namespace Seebattle.Core.Dialogs
                 }
 
             
-           //замена символов клеток, что находятся по углам на +
-           //так же замена символов клеток, что находятся по бокам на |
-           temp = Control.DrawUpDownWalls(temp, widht, heigth);
-           temp = Control.DrawLeftRightWalls(temp, widht, heigth);
-           temp = Control.DrawAngels(temp, widht, heigth); 
-
-
+            //замена символов клеток, что находятся по углам на +
+            //так же замена символов клеток, что находятся по бокам на |
+            temp = Control.DrawUpDownWalls(temp, widht, heigth);
+            temp = Control.DrawLeftRightWalls(temp, widht, heigth);
+            temp = Control.DrawAngels(temp, widht, heigth); 
             return temp;
         }
         #endregion

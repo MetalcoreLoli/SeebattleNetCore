@@ -1,22 +1,25 @@
-﻿using SeeBattle.Core;
+﻿using Seebattle.Core.Events.Properties;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reflection;
 
 namespace SeeBattle.Core.Controls
 {
-    internal abstract class Control
+    internal abstract class Control : INotifyPropertyChanged
     {
         #region Private Members
+        private Vector2D _location;
+
+        private string _title;
 
         #endregion
 
         #region Protected Members
 
         protected Cell[] body;
-        
+        protected Lable _lTitle;
+
+        public event EventHandler<PropertyChangedEventArgs> PropertyChanged;
+
         #endregion
 
         #region Public Properties
@@ -24,15 +27,31 @@ namespace SeeBattle.Core.Controls
         /// <summary>
         /// Заголовок
         /// </summary>
-        public string Title { get; set; }
+        public string Title 
+        { 
+            get => _title;
+            set 
+            {
+                _title = value;
+                _lTitle = new Lable(_title);
+                OnPropertyChanged(this.GetType().GetProperty(nameof(Title)));
+            } 
+        }
 
         /// <summary>
         /// Расположение на консоле
         /// </summary>
-        public Vector2D Location { get; set; }
+        public Vector2D Location 
+        { 
+            get => _location;
+            set 
+            {
+                _location = value;
+                OnPropertyChanged(this.GetType().GetProperty(nameof(Location)));
+            } 
+        }
 
         public bool IsVisible { get; set; } = true;
-
 
         /// <summary>
         /// Ширина
@@ -123,8 +142,11 @@ namespace SeeBattle.Core.Controls
         }
         #endregion
 
-
         #region Protected Methods
+        
+        protected virtual void OnPropertyChanged(PropertyInfo prop)
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
+
         protected virtual Cell[] InitBody(Int32 width, Int32 height)
         {
             Cell[] temp = new Cell[width * height];
@@ -136,7 +158,5 @@ namespace SeeBattle.Core.Controls
             return temp;
         }
         #endregion
-
-
     }
 }

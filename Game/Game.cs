@@ -146,8 +146,7 @@ namespace SeeBattle.Game
 
             Int32 stat_x = _firstPlayer.EnemyMap.Widht + _firstPlayer.Map.Widht + 25;
 
-            _staticTitle = new Lable();
-
+            _staticTitle                            = new Lable();
 
             _currentPlayerLable                     = new Lable();
             _currentPlayerKilledLable               = new Lable();
@@ -156,7 +155,7 @@ namespace SeeBattle.Game
 
             _staticTitle.Location                   = new Core.Vector2D(stat_x, 0);
 
-            _currentPlayerLable.Location            = new Core.Vector2D(0, _firstPlayer.Map.Height + 2);
+            _currentPlayerLable.Location            = new Core.Vector2D(2, _firstPlayer.Map.Height + 2);
             _currentPlayerKilledLable.Location      = new Core.Vector2D(stat_x, 2);
             _currentPlayerLostLable.Location        = new Core.Vector2D(stat_x, 3);
             _currentPlayerShipCountLable.Location   = new Core.Vector2D(stat_x, 4);
@@ -291,11 +290,11 @@ namespace SeeBattle.Game
                 firstLine.Text = "Создание и размещение крейсера - ##";
                 CreateShips(Player, 3, "c");
 
-                firstLine.Text = "Создание и размещение эсминкца - ###";
+                firstLine.Text = "Создание и размещение эсминца - ###";
                 CreateShips(Player, 2, "cr");
 
                 DrawControls();
-                firstLine.Text = "Создание и размещение линкор - ####";
+                firstLine.Text = "Создание и размещение линкора - ####";
                 ShipBase ship = CreateShip(Player.Map, "b "+_gameConsole.Input());
                 Player.Map.AddShipToMap(ship);
                 Player.Fleet.AddShipeToFleet(ship);
@@ -325,6 +324,7 @@ namespace SeeBattle.Game
             while (countOfShips-- > 0)
             {
                 DrawControls();
+
                 ShipBase ship = CreateShip(player.Map, shipType + " " +_gameConsole.Input());
                 player.Fleet.AddShipeToFleet(ship);
 
@@ -353,6 +353,22 @@ namespace SeeBattle.Game
 
             Vector2D swap           = map.ConvertToPostion(position_from_str) - 1;
             Vector2D position_vec   = new Vector2D(swap.Y, swap.X);
+
+            map.Shipes.ForEach(s => 
+            {
+                if (s.Location.X == position_vec.X && s.Location.Y == position_vec.Y)
+                {
+                    Int32 offset = 1 + s.Size;
+                    if ((position_vec.X + offset + s.Size)  < map.Widht)
+                        position_vec.X += offset;
+                    else if((position_vec.Y + offset + s.Size) < map.Height)
+                    {
+                        position_vec.X = 1;
+                        position_vec.Y += offset - 1;
+                    }
+                }
+            }); 
+
             ship.Location           = position_vec;
 
             return ship;
