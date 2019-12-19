@@ -102,11 +102,11 @@ namespace SeeBattle.Menu
                 switch (keyInfo.Key)
                 {
                     case ConsoleKey.UpArrow:
-                        if ((Cursor.Location.Y - 1) < Height)
+                        if ((Cursor.Location.Y - 1) > Location.Y)
                             Cursor.MoveTo(new Vector2D(0, -1));
                         break;
                     case ConsoleKey.DownArrow:
-                        if ((Cursor.Location.Y + 1) < Widht)
+                        if ((Cursor.Location.Y + 1) < Height)
                             Cursor.MoveTo(new Vector2D(0, 1));
                         break;
                     case ConsoleKey.Enter:
