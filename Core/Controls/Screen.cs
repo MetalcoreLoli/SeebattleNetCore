@@ -18,9 +18,7 @@ namespace SeeBattle.Core.Controls
         internal List<Control> Controls { get; set; }
         #endregion
 
-
         #region Events
-
         #endregion
 
         #region Constructors
@@ -59,12 +57,6 @@ namespace SeeBattle.Core.Controls
             body = Control.DrawLeftRightWalls(body, Widht, Height);
             body = Control.DrawAngels(body, Widht, Height);
         }
-
-        private void OnUpdate()
-        {
-
-        }
-
         #endregion
 
         #region Public Methods
@@ -76,16 +68,12 @@ namespace SeeBattle.Core.Controls
             DrawWallsAndAngels();
         }
 
-        public void Update()
-        {
-            Draw();
-            OnUpdate();
-        }
-
         public override void Draw()
         {
             Console.Clear();
             Clean();
+            OnUpdate();
+
             foreach (Cell cell in body)
                 Render.WithOffset(cell, 0, 0);
 

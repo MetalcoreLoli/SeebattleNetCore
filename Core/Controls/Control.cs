@@ -18,7 +18,12 @@ namespace SeeBattle.Core.Controls
         protected Cell[] body;
         protected Lable _lTitle;
 
+        #endregion
+
+        #region Events
+
         public event EventHandler<PropertyChangedEventArgs> PropertyChanged;
+        public event EventHandler Update;
 
         #endregion
 
@@ -146,6 +151,9 @@ namespace SeeBattle.Core.Controls
         
         protected virtual void OnPropertyChanged(PropertyInfo prop)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
+
+        protected virtual void OnUpdate()
+         => Update?.Invoke(this, new EventArgs());
 
         protected virtual Cell[] InitBody(Int32 width, Int32 height)
         {
