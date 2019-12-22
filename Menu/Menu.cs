@@ -16,7 +16,7 @@ namespace SeeBattle.Menu
         private MenuItem _selectedItem;
 
         private new Lable _lTitle;
-        private new String _title;
+        private String _title;
         #endregion
 
         #region Public Propertie
@@ -28,7 +28,12 @@ namespace SeeBattle.Menu
             {
                 _title = value;
                 _lTitle = new Lable(_title);
-                _lTitle.Location = new Vector2D (Location.X + (Widht  - _title.Length) / 4 + _title.Length - 2, Location.Y - 1);
+                
+                _lTitle.Location 
+                    = new Vector2D (
+                            Location.X + (Widht  - _title.Length) / 4 + _title.Length - 2,
+                            Location.Y - 1);
+
                 OnPropertyChanged(this.GetType().GetProperty(nameof(Title)));
             }
         }
@@ -77,7 +82,8 @@ namespace SeeBattle.Menu
                 switch (evArgs.PropertyName)
                 {
                     case nameof(Title):
-                        _lTitle = new Lable(evArgs.Property.GetValue(sender).ToString());
+                        _lTitle 
+                            = new Lable(evArgs.Property.GetValue(sender).ToString());
                         break;
                     default:
                         break;
@@ -110,14 +116,12 @@ namespace SeeBattle.Menu
                             Cursor.MoveTo(new Vector2D(0, 1));
                         break;
                     case ConsoleKey.Enter:
-                        var item = Items.FirstOrDefault(item => item.IsSelected);
-                        if (item!= null)
+                        var item = Items.FirstOrDefault(i => i.IsSelected);
+                        if (item != null)
                             ActivateMenuItem(item);
                         break;
                 }
 
-              
-                
                 foreach (MenuItem menuItem in Items)
                 {
                     if (menuItem.Location.Y.Equals(Cursor.Location.Y))

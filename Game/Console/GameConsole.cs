@@ -174,7 +174,6 @@ namespace SeeBattle.Game.LogConsoles
             for (int i = 1; i < Widht * Height - 2; i++)
                 body[i].Symbol = ' ';
         }
-
         #endregion
     }
 }

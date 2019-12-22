@@ -7,7 +7,7 @@ using System.Text;
 namespace Seebattle.Core.Dialogs
 {
 
-    internal sealed class MessageBox 
+    public class MessageBox 
     {
 
         #region Private Members
@@ -24,16 +24,16 @@ namespace Seebattle.Core.Dialogs
         #region Constructors
         static MessageBox()
         {
+            _text       = new Lable();
             _location   
                 = new Vector2D(
-                        Console.WindowWidth / 2, 
-                        Console.WindowHeight / 2);
+                        Console.WindowWidth / 2 - _text.Widht, 
+                        Console.WindowHeight / 2 - _text.Height);
 
             _width  = 30;
             _height = 5;
 
             _body = InitBody(_width, _height);
-            _text       = new Lable();
         }
         #endregion
 
@@ -46,6 +46,9 @@ namespace Seebattle.Core.Dialogs
         public static void Show(string message)
         {
             _text.Text = message;
+
+            _text.Location += _location + 1;
+
             foreach (Cell cell in _body)
                Render.WithOffset(cell, 0, 0); 
             
