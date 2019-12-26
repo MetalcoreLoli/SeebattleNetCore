@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Seebattle.Core.Dialogs;
 using SeeBattle.Core;
 using SeeBattle.Core.Controls;
 using SeeBattle.Game.Actors;
@@ -227,10 +228,11 @@ namespace SeeBattle.Game
 
         private void DrawWinnerStatistic(IActor player)
         {
-                _currentPlayerLable.Text = $"{player.Name}  - победитель";
-                ShowPlayerStatistic(player);
-                player.EnemyMap.IsCellsVisible = true;
-                DrawControls();
+            _currentPlayerLable.Text = $"{player.Name}  - победитель";
+            MessageBox.Show(_currentPlayerLable.Text, Seebattle.Core.Dialogs.Enums.MessageBoxButtons.OK);
+            ShowPlayerStatistic(player);
+            player.EnemyMap.IsCellsVisible = true;
+            DrawControls();
         }
 
         /// <summary>
