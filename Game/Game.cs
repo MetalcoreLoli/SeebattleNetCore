@@ -101,16 +101,18 @@ namespace SeeBattle.Game
 
             //игроки создаю свой флот и размещают его на карте
             PlayerCreateFleet(_firstPlayer);
-            PlayerCreateFleet(_secondPlayer);
+            //PlayerCreateFleet(_secondPlayer);
 
 
             //_firstPlayer.Map.AddShipToMap(CreateShip(_firstPlayer.Map, "s a1 v"));
             //_firstPlayer.Map.AddShipToMap(CreateShip(_firstPlayer.Map, "s a3 v"));
-            //_firstPlayer.Map.AddShipToMap(CreateShip(_firstPlayer.Map, "c b5"));
+            ////_firstPlayer.Map.AddShipToMap(CreateShip(_firstPlayer.Map, "c b5"));
 
             //_secondPlayer.Map.AddShipToMap(CreateShip(_secondPlayer.Map, "s a1 v"));
-            //_secondPlayer.Map.AddShipToMap(CreateShip(_secondPlayer.Map, "s a3"));
-            //_secondPlayer.Map.AddShipToMap(CreateShip(_secondPlayer.Map, "c b5"));
+            ////_secondPlayer.Map.AddShipToMap(CreateShip(_secondPlayer.Map, "s a3"));
+            ////_secondPlayer.Map.AddShipToMap(CreateShip(_secondPlayer.Map, "c b5"));
+
+            Player winner = null;
 
             //очистка консоли
             Console.Clear();
@@ -120,7 +122,7 @@ namespace SeeBattle.Game
                 PlayerTurn(_firstPlayer);
                 if (_firstPlayer.IsWin)
                 {
-                    DrawWinnerStatistic(_firstPlayer);
+                    winner = DrawWinnerStatistic(_firstPlayer) as Player;
                     break;
                 }
 
@@ -128,11 +130,15 @@ namespace SeeBattle.Game
                 PlayerTurn(_secondPlayer);
                 if (_secondPlayer.IsWin) 
                 {
-                    DrawWinnerStatistic(_secondPlayer); 
+                    winner = DrawWinnerStatistic(_secondPlayer) as Player; 
                     break;
                 }
             }
             while (true);
+
+            var dialogResult = MessageBox.Show($"{winner.Name} - победитель!!!", Seebattle.Core.Dialogs.Enums.MessageBoxButtons.OkCancel);
+            //if (dialogResult == Seebattle.Core.Dialogs.Enums.DialogResult.OK)
+            //    Start();
         }
         #endregion
 
@@ -226,13 +232,13 @@ namespace SeeBattle.Game
             }
         }
 
-        private void DrawWinnerStatistic(IActor player)
+        private IActor DrawWinnerStatistic(IActor player)
         {
             _currentPlayerLable.Text = $"{player.Name}  - победитель";
-            MessageBox.Show(_currentPlayerLable.Text, Seebattle.Core.Dialogs.Enums.MessageBoxButtons.OK);
             ShowPlayerStatistic(player);
             player.EnemyMap.IsCellsVisible = true;
             DrawControls();
+            return player;
         }
 
         /// <summary>
@@ -329,7 +335,6 @@ namespace SeeBattle.Game
 
                 ShipBase ship = CreateShip(player.Map, shipType + " " +_gameConsole.Input());
                 player.Fleet.AddShipeToFleet(ship);
-
                 player.Map.AddShipToMap(ship);
                 player.Map.Draw();
             }
@@ -353,11 +358,24 @@ namespace SeeBattle.Game
             ShipBase ship   = CreateShipFromString(shipType);
             ship.IsVertical = isVectical;
 
-            Vector2D swap           = map.ConvertToPostion(position_from_str) - 1;
-            Vector2D position_vec   = new Vector2D(swap.Y, swap.X);
-
+            Vector2D position_vec  = GetShipPositionOnMap(map, position_from_str);
+            ship.Location = position_vec;
             map.Shipes.ForEach(s => 
             {
+                while (s.IsShipInFov(ship) || !map.CanBePlace(ship))
+                {
+                    Lable firstLine = new Lable
+                    {
+                        Text = $"Введите позицию корабля снова!!!!!",
+                        Location = new Core.Vector2D(0, _firstPlayer.Map.Height + 2)
+                    };
+                    Controls.Add(firstLine);
+                    DrawControls();
+                    position_vec = GetShipPositionOnMap(map, _gameConsole.Input());
+                    Controls.Remove(firstLine);
+                    ship.Location = position_vec;
+                }
+
                 if (s.Location.X == position_vec.X && s.Location.Y == position_vec.Y)
                 {
                     Int32 offset = 1 + s.Size;
@@ -374,6 +392,12 @@ namespace SeeBattle.Game
             ship.Location           = position_vec;
 
             return ship;
+        }
+
+        private Vector2D GetShipPositionOnMap(Map map, string position_from_str)
+        {
+            Vector2D swap = map.ConvertToPostion(position_from_str) - 1;
+            return new Vector2D(swap.Y, swap.X);
         }
 
         /// <summary>

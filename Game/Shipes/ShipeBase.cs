@@ -12,7 +12,7 @@ namespace SeeBattle.Game.Shipes
         #region Protected Members
 
         protected Cell[] body;
-
+        
         #endregion
 
         #region Private Members
@@ -108,6 +108,19 @@ namespace SeeBattle.Game.Shipes
                 else
                     body[i].Position = new Vector2D(this.Location.X + mLocation.X + i, mLocation.Y + Location.Y);
             }
+        }
+
+        internal bool IsShipInFov(ShipBase ship)
+        {
+            if (Location == ship.Location) return true;
+            foreach (Cell cell in body)
+            {
+                if (cell.Position.X + 1 == ship.Location.X + 1 || cell.Position.Y + 1 == ship.Location.Y)
+                    return true;
+                //if (cell.Position.X - 1 == ship.Location.X - 1 || cell.Position.Y - 1 == ship.Location.Y)
+                //    return true;
+            }
+            return false;
         }
 
         internal void HitCell(Vector2D positionToShipLocation)

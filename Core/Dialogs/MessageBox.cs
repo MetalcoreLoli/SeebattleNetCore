@@ -30,6 +30,8 @@ namespace Seebattle.Core.Dialogs
         private static Cursor _cursor;
 
         private static List<Button> _buttons;
+
+        private static bool _isAlive;
         #endregion
 
         #region Public Properties
@@ -67,14 +69,15 @@ namespace Seebattle.Core.Dialogs
         {
             _text.Text = message;
             Draw(MessageBoxButtons.None);
+            Console.Clear();
             return DialogResult;
         }
+
 
         public static DialogResult Show(string message, MessageBoxButtons buttons)
         {
             _text.Text = message;
-          //  Draw(buttons);
-
+            _isAlive = true;
             do
             {
                 Draw(buttons);
@@ -82,15 +85,26 @@ namespace Seebattle.Core.Dialogs
                 switch (keyInfo.Key)
                 {
                     case ConsoleKey.Enter:
-
+                        foreach (Button button in _buttons)
+                        {
+                            if(button.IsSelected)
+                            {
+                                button.OnClick();
+                                if (!button.IsPressed) button.IsPressed = true;
+                                else button.IsPressed = false;
+                            }
+                        }
+                        _isAlive = false;
                         break;
+                    
                     case ConsoleKey.Tab:
                         _cursor.MoveTo(new Vector2D(_buttonWidth + 1, 0));
                         break;
+                    
                     case ConsoleKey.LeftArrow:
-                        _cursor.MoveTo(new Vector2D(-_buttonWidth + 1, 0));
-
+                        _cursor.MoveTo(new Vector2D(-_buttonWidth - 1, 0));
                         break;
+                    
                     case ConsoleKey.RightArrow:
                         _cursor.MoveTo(new Vector2D(_buttonWidth + 1, 0));
                         break;
@@ -99,8 +113,8 @@ namespace Seebattle.Core.Dialogs
                 }
                 foreach (Button button in _buttons)
                     IsButtonSelected(button);
-            } while (true);
-
+            } while (_isAlive);
+            Console.Clear();
             return DialogResult;
         }
 
@@ -126,12 +140,16 @@ namespace Seebattle.Core.Dialogs
 
         private static bool IsButtonSelected(Button button)
         {
-            if (button.Location.X >= _cursor.Location.X && _cursor.Location.Y >= button.Location.Y)
+            if (button.Location.X + 1 == _cursor.Location.X)
             {
                 if (button.IsSelected == false) button.IsSelected = true;
                 return true;
             }
-            else return false;
+            else
+            {
+                button.IsSelected = false;
+                return false;
+            }
         }
 
         private static Cell[] InitBody(Int32 widht, Int32 heigth)
@@ -163,6 +181,8 @@ namespace Seebattle.Core.Dialogs
                     _ok = new Button(_buttonWidth, _buttonHeight, new Vector2D(_location.X + _buttonWidth / 2 + 1, _location.Y + _height - _buttonHeight - 1));
                     _ok.Text = "OK";
 
+                    _ok.Click += _ok_Click;
+
                     if (!_buttons.Contains(_ok))
                         _buttons.Add(_ok);
                     break;
@@ -170,6 +190,9 @@ namespace Seebattle.Core.Dialogs
                 case MessageBoxButtons.OkCancel:
                     _ok     = new Button(_buttonWidth, _buttonHeight, new Vector2D(_location.X + _buttonWidth / 2, _location.Y + _height - _buttonHeight - 1));
                     _cancel = new Button(_buttonWidth, _buttonHeight, new Vector2D(_location.X + _buttonWidth / 2  + _buttonWidth + 1, _location.Y + _height - _buttonHeight - 1));
+                    
+                    _ok.Click       += _ok_Click;
+                    _cancel.Click   += _cancel_Click;
 
                     _ok.Text        = "OK";
                     _cancel.Text    = "Cancel";
@@ -188,6 +211,16 @@ namespace Seebattle.Core.Dialogs
             if (_buttons != null)
                 foreach (var button in _buttons)
                     button.Draw();
+        }
+
+        private static void _cancel_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.Cancel;
+        }
+
+        private static void _ok_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.OK;
         }
         #endregion
     }

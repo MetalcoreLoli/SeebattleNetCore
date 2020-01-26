@@ -34,7 +34,7 @@ namespace SeeBattle.Core.Controls
                         for (int y = 1; y < Height - 1; y++)
                         {
                             body[x + Widht * y].BackColor = ConsoleColor.White;
-                            body[x + Widht * y].Color = ConsoleColor.Black;
+                            body[x + Widht * y].Color     = ConsoleColor.Black;
                         }
                      
                     }
@@ -110,14 +110,20 @@ namespace SeeBattle.Core.Controls
         #region Public Methods
         public override void Draw()
         {
-            foreach(Cell cell in body)
-               Render.WithOffset(cell, 0, 0);
+             foreach (Cell cell in body)
+                  Render.WithOffset(cell, 0, 0);
             _textLable.Draw();
-        } 
-        #endregion 
-        
+        }
+
+        public void OnClick()
+            => Click?.Invoke(this, new EventArgs());
+        #endregion
+
         #region Private Methods
-       
+
+
+
+
         private void Init()
         {
             //Init body

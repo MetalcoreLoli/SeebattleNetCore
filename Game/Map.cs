@@ -351,6 +351,16 @@ namespace SeeBattle.Game
             Vector2D pos = ConvertToPostion(position);
             return ShotAt(pos);
         }
+
+        public bool CanBePlace(ShipBase ship)
+        {
+            foreach (Cell cell in ship.Body)
+            {
+                if (cell.Position.X >= Widht || cell.Position.Y >= Height)
+                    return false;
+            }
+            return true;
+        }
         #endregion
     }
 }
