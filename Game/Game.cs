@@ -376,17 +376,17 @@ namespace SeeBattle.Game
                     ship.Location = position_vec;
                 }
 
-                if (s.Location.X == position_vec.X && s.Location.Y == position_vec.Y)
-                {
-                    Int32 offset = 1 + s.Size;
-                    if ((position_vec.X + offset + s.Size)  < map.Widht)
-                        position_vec.X += offset;
-                    else if((position_vec.Y + offset + s.Size) < map.Height)
-                    {
-                        position_vec.X = 1;
-                        position_vec.Y += offset - 1;
-                    }
-                }
+                //if (s.Location.X == position_vec.X && s.Location.Y == position_vec.Y)
+                //{
+                //    Int32 offset = 1 + s.Size;
+                //    if ((position_vec.X + offset + s.Size)  < map.Widht)
+                //        position_vec.X += offset;
+                //    else if((position_vec.Y + offset + s.Size) < map.Height)
+                //    {
+                //        position_vec.X = 1;
+                //        position_vec.Y += offset - 1;
+                //    }
+                //}
             }); 
 
             ship.Location           = position_vec;

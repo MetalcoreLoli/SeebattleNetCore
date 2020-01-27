@@ -117,8 +117,8 @@ namespace SeeBattle.Game.Shipes
             {
                 if (cell.Position.X + 1 == ship.Location.X + 1 || cell.Position.Y + 1 == ship.Location.Y)
                     return true;
-                //if (cell.Position.X - 1 == ship.Location.X - 1 || cell.Position.Y - 1 == ship.Location.Y)
-                //    return true;
+                if (cell.Position.X - 1 == ship.Location.X && cell.Position.Y - 1 == ship.Location.Y)
+                    return true;
             }
             return false;
         }

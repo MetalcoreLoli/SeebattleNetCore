@@ -97,13 +97,13 @@ namespace SeeBattle.Menu
 
         public void Show()
         {
-             UpdateMenuItems();
+            UpdateMenuItems();
             do
             {
                 if (IsClose) break;
                 Draw();
                 Cursor.Draw();
-                
+
                 var keyInfo = Console.ReadKey(true);
                 switch (keyInfo.Key)
                 {
@@ -139,7 +139,7 @@ namespace SeeBattle.Menu
 
         public override void Draw()
         {
-            Console.Clear();
+           // Console.Clear();
             _lTitle.Draw();
             foreach (Cell cell in body)
                 Render.WithOffset(cell, 0, 0);
